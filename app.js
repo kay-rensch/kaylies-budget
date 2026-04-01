@@ -109,6 +109,7 @@ async function addRecurring() {
 
 async function deleteRecurring(id) {
   await deleteDoc(doc(db, `users/${USER_ID}/recurring/${id}`));
+  await renderRecurring();   // ← refreshes the table immediately
 }
 
 async function renderRecurring() {
