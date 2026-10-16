@@ -2,37 +2,44 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Kaylie's Budget</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f5f5f7" />
+  <title>Kaylie's Budget</title>
+
   <style>
-    * { box-sizing: border-box; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-    body { margin: 0; padding: 1.5rem; background: #f5f5f7; color: #111827; }
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 1.5rem;
+      background: #f5f5f7;
+      color: #111827;
+    }
 
     h1 {
       text-align: center;
       font-size: 1.8rem;
       font-weight: 700;
-      margin-bottom: 0.25rem;
+      margin-bottom: 0.5rem;
     }
 
-    .month-title {
+    h2 {
+      font-size: 1.3rem;
+    }
+
+    .subtitle {
       text-align: center;
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
       color: #6b7280;
-      margin-top: 1rem;
-      margin-bottom: 0.25rem;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
     }
 
     .section-spaced {
       margin-top: 2rem;
       margin-bottom: 1.5rem;
-    }
-
-    /* NEW: move buttons down slightly */
-    .move-down {
-      margin-top: 0.6rem;
     }
 
     .container {
@@ -41,76 +48,191 @@
       background: #ffffff;
       padding: 1.5rem;
       border-radius: 0.75rem;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
     }
 
-    input, select {
+    .row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+      align-items: end;
+    }
+
+    .expense-row {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .field {
+      min-width: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+
+    input,
+    select {
       width: 100%;
-      padding: 0.6rem;
+      min-width: 0;
+      padding: 0.65rem;
       border-radius: 0.5rem;
       border: 1px solid #d1d5db;
       font-size: 1rem;
+      background: white;
+      color: #111827;
     }
 
-    #monthSelect {
-      width: 260px;
-      margin: 0 auto;
-      display: block;
+    input:focus,
+    select:focus {
+      outline: 2px solid #93c5fd;
+      border-color: #2563eb;
     }
 
     button {
       border: none;
       border-radius: 0.5rem;
-      padding: 0.55rem 1rem;
+      padding: 0.65rem 1rem;
       font-size: 0.95rem;
       cursor: pointer;
+      transition: opacity 0.2s, background 0.2s;
     }
 
-    .btn-primary { background: #2563eb; color: #fff; }
-    .btn-danger { background: #ef4444; color: #fff; }
+    button:hover {
+      opacity: 0.9;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      color: #ffffff;
+      width: 100%;
+    }
+
+    .btn-danger {
+      background: #ef4444;
+      color: #ffffff;
+    }
 
     .summary {
       display: flex;
       gap: 1rem;
-      margin: 1rem 0;
+      margin: 1.5rem 0;
       flex-wrap: wrap;
     }
 
     .card {
       flex: 1 1 150px;
+      min-width: 0;
       background: #f9fafb;
       border-radius: 0.75rem;
-      padding: 0.75rem 1rem;
+      padding: 1rem;
       border: 1px solid #e5e7eb;
+      transition: background 0.2s, border-color 0.2s;
     }
 
     .card-title {
       font-size: 0.8rem;
       text-transform: uppercase;
       color: #6b7280;
-      margin-bottom: 0.25rem;
+      margin-bottom: 0.4rem;
     }
 
     .card-value {
-      font-size: 1.1rem;
-      font-weight: 600;
+      font-size: 1.25rem;
+      font-weight: 700;
+      overflow-wrap: anywhere;
     }
 
-    #remainingCard {
+    #remainingCard.good {
       background: #f0fdf4;
       border-color: #86efac;
     }
 
-    table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
-    th, td { padding: 0.5rem; border-bottom: 1px solid #e5e7eb; }
-    th { background: #f3f4f6; font-weight: 600; }
-    .right { text-align: right; }
+    #remainingCard.good .card-value {
+      color: #15803d;
+    }
+
+    #remainingCard.bad {
+      background: #fef2f2;
+      border-color: #fca5a5;
+    }
+
+    #remainingCard.bad .card-value {
+      color: #dc2626;
+    }
+
+    .clear-section {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 1rem;
+    }
+
+    .table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      margin-bottom: 2rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.5rem;
+      min-width: 500px;
+    }
+
+    th,
+    td {
+      padding: 0.75rem 0.5rem;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+    }
+
+    th {
+      background: #f3f4f6;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .right {
+      text-align: right;
+    }
 
     .category-pill {
-      padding: 0.15rem 0.5rem;
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
       border-radius: 999px;
       background: #e5e7eb;
-      font-size: 0.75rem;
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+
+    .delete-btn {
+      font-size: 0.8rem;
+      padding: 0.45rem 0.65rem;
+    }
+
+    .empty-message {
+      text-align: center;
+      color: #9ca3af;
+      padding: 1.5rem;
+    }
+
+    .status-message {
+      display: none;
+      margin: 1rem 0;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      background: #fef2f2;
+      border: 1px solid #fca5a5;
+      color: #991b1b;
+      font-size: 0.9rem;
     }
 
     .money-rain {
@@ -126,115 +248,212 @@
 
     .money {
       position: absolute;
+      top: 0;
       font-size: 2rem;
       animation: fall 1.5s linear forwards;
     }
 
     @keyframes fall {
-      from { transform: translateY(-50px) rotate(0deg); opacity: 1; }
-      to { transform: translateY(120vh) rotate(360deg); opacity: 0; }
+      from {
+        transform: translateY(-50px) rotate(0deg);
+        opacity: 1;
+      }
+      to {
+        transform: translateY(120vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    @media (max-width: 650px) {
+      body {
+        padding: 0.75rem;
+      }
+
+      .container {
+        padding: 1rem;
+      }
+
+      .row,
+      .expense-row {
+        grid-template-columns: 1fr;
+      }
+
+      .summary {
+        gap: 0.6rem;
+      }
+
+      .card {
+        flex-basis: 100%;
+      }
+
+      .clear-section .btn-danger {
+        width: 100%;
+      }
+
+      h1 {
+        font-size: 1.6rem;
+      }
     }
   </style>
 </head>
+
 <body>
-
-  <div class="container">
-
+  <main class="container">
     <h1>Kaylie's Budget</h1>
+    <p class="subtitle">Track your income, expenses, and remaining balance.</p>
 
-    <div class="month-title">Month</div>
-    <input type="month" id="monthSelect" />
+    <div id="statusMessage" class="status-message" role="alert"></div>
 
-    <div class="summary">
+    <section class="summary" aria-label="Budget summary">
       <div class="card">
         <div class="card-title">Total Income</div>
         <div class="card-value" id="plannedIncome">$0.00</div>
       </div>
+
       <div class="card">
         <div class="card-title">Total Spent</div>
         <div class="card-value" id="totalSpent">$0.00</div>
       </div>
-      <div class="card" id="remainingCard">
+
+      <div class="card good" id="remainingCard">
         <div class="card-title">Remaining</div>
         <div class="card-value" id="remainingAmount">$0.00</div>
       </div>
+    </section>
+
+    <div class="clear-section">
+      <button class="btn-danger" id="clearMonthBtn" type="button">
+        Clear All Budget Data
+      </button>
     </div>
 
-    <button class="btn-danger" id="clearMonthBtn" style="margin-bottom:1rem;">Clear this month</button>
+    <section>
+      <h2 class="section-spaced">Add Income</h2>
 
-    <h2 class="section-spaced">Add Income</h2>
-    <div class="row">
-      <div>
-        <label>Name</label>
-        <input type="text" id="incomeName" />
-      </div>
-      <div>
-        <label>Amount</label>
-        <input type="number" id="incomeAmount" min="0" step="0.01" />
-      </div>
-      <div>
-        <label>&nbsp;</label>
-        <button class="btn-primary move-down" id="addIncomeBtn">Add income</button>
-      </div>
-    </div>
+      <form id="incomeForm" class="row">
+        <div class="field">
+          <label for="incomeName">Name</label>
+          <input
+            type="text"
+            id="incomeName"
+            placeholder="e.g. Paycheck"
+            maxlength="100"
+            required
+          />
+        </div>
 
-    <h2 class="section-spaced">Add Expense</h2>
-    <div class="row">
-      <div>
-        <label>Name</label>
-        <input type="text" id="expenseName" />
-      </div>
-      <div>
-        <label>Category</label>
-        <select id="expenseCategory">
-          <option value="Food">Food</option>
-          <option value="Clothes">Clothes</option>
-          <option value="Entertainment">Entertainment</option>
-          <option value="Transportation">Transportation</option>
-          <option value="Personal Care">Personal Care</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
-      <div>
-        <label>Amount</label>
-        <input type="number" id="expenseAmount" min="0" step="0.01" />
-      </div>
-      <div>
-        <label>&nbsp;</label>
-        <button class="btn-primary move-down" id="addExpenseBtn">Add expense</button>
-      </div>
-    </div>
+        <div class="field">
+          <label for="incomeAmount">Amount ($)</label>
+          <input
+            type="number"
+            id="incomeAmount"
+            min="0.01"
+            step="0.01"
+            placeholder="0.00"
+            required
+          />
+        </div>
 
-    <h2>Income</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Name</th>
-          <th class="right">Amount</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody id="incomeTableBody"></tbody>
-    </table>
+        <div class="field">
+          <button class="btn-primary" id="addIncomeBtn" type="submit">
+            Add Income
+          </button>
+        </div>
+      </form>
+    </section>
 
-    <h2>Expenses</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Name</th>
-          <th>Category</th>
-          <th class="right">Amount</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody id="expenseTableBody"></tbody>
-    </table>
+    <section>
+      <h2 class="section-spaced">Add Expense</h2>
 
-  </div>
+      <form id="expenseForm" class="row expense-row">
+        <div class="field">
+          <label for="expenseName">Name</label>
+          <input
+            type="text"
+            id="expenseName"
+            placeholder="e.g. Groceries"
+            maxlength="100"
+            required
+          />
+        </div>
 
-  <div id="moneyRain" class="money-rain"></div>
+        <div class="field">
+          <label for="expenseCategory">Category</label>
+          <select id="expenseCategory">
+            <option value="Food">Food</option>
+            <option value="Clothes">Clothes</option>
+            <option value="Entertainment">Entertainment</option>
+            <option value="Transportation">Transportation</option>
+            <option value="Personal Care">Personal Care</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="expenseAmount">Amount ($)</label>
+          <input
+            type="number"
+            id="expenseAmount"
+            min="0.01"
+            step="0.01"
+            placeholder="0.00"
+            required
+          />
+        </div>
+
+        <div class="field">
+          <button class="btn-primary" id="addExpenseBtn" type="submit">
+            Add Expense
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <section>
+      <h2>Income</h2>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Date Added</th>
+              <th>Name</th>
+              <th class="right">Amount</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="incomeTableBody">
+            <tr>
+              <td colspan="4" class="empty-message">Loading income...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>Expenses</h2>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Date Added</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th class="right">Amount</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="expenseTableBody">
+            <tr>
+              <td colspan="5" class="empty-message">Loading expenses...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <div id="moneyRain" class="money-rain" aria-hidden="true"></div>
 
   <script type="module" src="app.js"></script>
 </body>
